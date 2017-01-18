@@ -10,7 +10,8 @@ turtles-own [
   pos ; position vector ci
   informed ; boolean
   desdir ; desired direction of travel for each turtle --> d value in formula
-  target ; direction for the informed animals --> must be empty for uninformed ones
+  targetx ; direction for the informed animals --> must be empty for uninformed ones
+  targety
 ]
 
 to setup
@@ -25,6 +26,7 @@ to setup
     set informed false
     set direction random 360
     set heading direction
+    set speed 1
   ]
   create-turtles n * proportion
   [
@@ -33,6 +35,14 @@ to setup
     set informed true
     set direction random 360
     set heading direction
+    set speed 1
+    set targetx 15
+    set targety 15
+  ]
+  ; target position for the turtle herd
+  ask patch 15 15
+  [
+    set pcolor white
   ]
 end
 
@@ -52,7 +62,6 @@ end
 to getDist
   ; Calculate the distance of one turtle to ALL others
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -89,8 +98,8 @@ SLIDER
 n
 n
 0
-1000
-1000.0
+200
+200.0
 1
 1
 NIL
