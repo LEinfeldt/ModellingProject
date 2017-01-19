@@ -62,6 +62,37 @@ end
 to getDist
   ; Calculate the distance of one turtle to ALL others
 end
+
+
+
+;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
+; add vectors
+; exapmle: show vector-add [0.1 0.2] [0.5 0.3]
+to-report vector-add [v1 v2]
+  report (map + v1 v2)
+end
+
+; substract vectors
+to-report vector-substract [v1 v2]
+  report (map - v1 v2)
+end
+
+; length of vector
+to-report vector-length [v1]
+  report sqrt (first v1 * first v1 + last v1 * last v1)
+end
+
+; multiple vector with a real number
+to-report vector-multiply [v1 r]
+  report (list (first v1 * r) (last v1 * r))
+end
+
+; normalize a vector
+; 1/length * v1
+; exapmle: show vector-normalize [2 2]
+to-report vector-normalize [v1]
+  report (vector-multiply v1 (1 / vector-length v1))
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
