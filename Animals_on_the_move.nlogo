@@ -53,6 +53,13 @@ end
 
 to normalMove
   ; They move naively only guided by others
+  ; wenn ein anderes Tier auf demselben Patch ist, dann muss das Tier einfach weg
+  ; wenn kein anderes da ist, wird die gewichtung von den anderen genommen und das Tier läuft in die Richtung
+  ; von den anderen Tierpositionen in der Umgebung (gemittelt) --> 8 patches
+  ; mach ne if (andere tiere auf meinem patch?)
+  ; -->  dann weg
+  ; else (ist tier attracted auf andere)
+  ; --> dann gemittelte Position aller anderen Tiere
 end
 
 to informedMove
