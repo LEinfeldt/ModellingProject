@@ -14,6 +14,8 @@ turtles-own [
   targety
 ]
 
+;;========================================TEST=========================ist die dirtovec funktion in der reichtigen gradzahl??=========================
+
 to setup
   clear-all
 
@@ -47,13 +49,27 @@ to setup
 end
 
 to go
-  normalMove
-  informedMove
+  ;;normalMove
+  ;;informedMove
+  show vecToDir [-1 1]
 end
 
 to normalMove
+  let newPosVec 0
   ; They move naively only guided by others
-  ; wenn ein anderes Tier auf demselben Patch ist, dann muss das Tier einfach weg
+  ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
+  ask turtles
+  [
+    if count turtles-here > 1
+    [
+      ;move away from the current patch in the current direction
+      set direction (dirToVec direction)
+      let normal (vector-normalize direction)
+      set newPosVec (vector-multiply normal speed)
+      ;; just move it
+    ]
+    ;if
+  ]
   ; wenn kein anderes da ist, wird die gewichtung von den anderen genommen und das Tier läuft in die Richtung
   ; von den anderen Tierpositionen in der Umgebung (gemittelt) --> 8 patches
   ; mach ne if (andere tiere auf meinem patch?)
@@ -99,6 +115,27 @@ end
 ; exapmle: show vector-normalize [2 2]
 to-report vector-normalize [v1]
   report (vector-multiply v1 (1 / vector-length v1))
+end
+
+to-report dirToVec [number]
+  report (list (sin(first number)) (cos(first number)))
+end
+
+to-report scalar [v1 v2]
+  report (first v1 * first v2 + last v1 * last v2)
+end
+
+to-report vecToDir [v1]
+  ;horizontal vector
+  let v (list (first v1) (last v1))
+  ;vertical vector
+  let y (list 0 1)
+  ;let hordeg (acos(first hor / vector-length (hor)))
+  if (first v1) < 0
+  [
+    report (360 - (acos( (scalar v y) / (vector-length(v) * vector-length(y)))))
+  ]
+  report (acos( (scalar v y) / (vector-length(v) * vector-length(y))))
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
