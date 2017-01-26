@@ -7,14 +7,11 @@
 turtles-own [
   speed ; speed si
   direction ; direction vector vi
-  pos ; position vector ci
   informed ; boolean
   desdir ; desired direction of travel for each turtle --> d value in formula
   targetx ; direction for the informed animals --> must be empty for uninformed ones
   targety
 ]
-
-;;========================================TEST=========================ist die dirtovec funktion in der reichtigen gradzahl??=========================
 
 to setup
   clear-all
@@ -49,33 +46,54 @@ to setup
 end
 
 to go
-  ;;normalMove
+  normalMove ;; danach die direction wieder in deg umwandeln.
   ;;informedMove
-  show vecToDir [-1 1]
+  ;show vecToDir [-1 1]
+  ;ask turtles [show list xcor ycor]
 end
 
+; wenn kein anderes da ist, wird die gewichtung von den anderen genommen und das Tier läuft in die Richtung
+  ; von den anderen Tierpositionen in der Umgebung (gemittelt) --> 8 patches
+  ; mach ne if (andere tiere auf meinem patch?)
+  ; -->  dann weg
+  ; else (ist tier attracted auf andere)
+  ; --> dann gemittelte Position aller anderen Tiere
 to normalMove
   let newPosVec 0
   ; They move naively only guided by others
   ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
   ask turtles
   [
-    if count turtles-here > 1
+    ifelse count turtles-here > 1
     [
       ;move away from the current patch in the current direction
       set direction (dirToVec direction)
       let normal (vector-normalize direction)
       set newPosVec (vector-multiply normal speed)
-      ;; just move it
+      set desdir vector-add (list xcor ycor) newPosVec
+      set direction (vecToDir direction)
     ]
-    ;if
+    ;;else
+    [
+      let d1 0
+      let d2 0
+      let posCurrentTurtle (list xcor ycor)
+      ask turtles-on neighbors
+      [
+        ;; erster teil formel (2) --> attraction to other viecher
+        ;; hier wird jedes Turtle auf den umgebenden Patches gefragt
+        ;;=============================???????????HIER GEHTS WEITER????????????=========================
+        ;; d ist desDir
+      ]
+      ; calculate the d (desDir) in the formula
+
+      if informed
+      [
+        informedMove
+      ]
+    ]
+
   ]
-  ; wenn kein anderes da ist, wird die gewichtung von den anderen genommen und das Tier läuft in die Richtung
-  ; von den anderen Tierpositionen in der Umgebung (gemittelt) --> 8 patches
-  ; mach ne if (andere tiere auf meinem patch?)
-  ; -->  dann weg
-  ; else (ist tier attracted auf andere)
-  ; --> dann gemittelte Position aller anderen Tiere
 end
 
 to informedMove
@@ -116,15 +134,17 @@ end
 to-report vector-normalize [v1]
   report (vector-multiply v1 (1 / vector-length v1))
 end
-
-to-report dirToVec [number]
-  report (list (sin(first number)) (cos(first number)))
-end
-
+; calculate a scalar product
 to-report scalar [v1 v2]
   report (first v1 * first v2 + last v1 * last v2)
 end
 
+; convert degrees to a vector
+to-report dirToVec [number]
+  report (list (sin(number)) (cos(number)))
+end
+
+; convert a vector to degrees
 to-report vecToDir [v1]
   ;horizontal vector
   let v (list (first v1) (last v1))
@@ -219,7 +239,7 @@ BUTTON
 208
 Go
 go
-T
+NIL
 1
 T
 OBSERVER
