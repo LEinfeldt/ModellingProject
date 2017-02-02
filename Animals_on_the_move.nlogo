@@ -18,7 +18,8 @@ to setup
 
   ;initialize the turtles
   set-default-shape turtles "bug"
-  create-turtles n - n * proportion
+  let number round (n - n * proportion)
+  create-turtles number
   [
     set color red
     setxy random-xcor random-ycor
@@ -27,7 +28,7 @@ to setup
     set heading direction
     set speed 1
   ]
-  create-turtles n * proportion
+  create-turtles n - number
   [
     set color blue
     setxy random-xcor random-ycor
@@ -58,7 +59,7 @@ end
   ; -->  dann weg
   ; else (ist tier attracted auf andere)
   ; --> dann gemittelte Position aller anderen Tiere
-to normalMove
+to normalAnimal
   let newPosVec 0
   ; They move naively only guided by others
   ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
@@ -75,36 +76,43 @@ to normalMove
     ]
     ;;else
     [
-      let d1 0
+      let d1 [0 0]
       let d2 0
       let posCurrentTurtle (list xcor ycor)
       ask turtles-on neighbors
       [
         ;; erster teil formel (2) --> attraction to other viecher
-        ;; hier wird jedes Turtle auf den umgebenden Patches gefragt
-        ;;=============================???????????HIER GEHTS WEITER????????????=========================
+        ;; set the numerator of the first part of formula 2
+        let numerator vector-substract (list xcor ycor) posCurrentTurtle
+        ;; set d1 as the first part of formula 2
+        set d1 vector-add d1 (vector-normalize numerator)
         ;; d ist desDir
+        ;; set the second part of formula 2
+        set d2 vector-normalize (list xcor ycor)
       ]
-      ; calculate the d (desDir) in the formula
-
+      set d2 vector-add d2 posCurrentTurtle
+      ;; set the final d from formula 2
+      set desDir vector-add d1 d2
+      set desDir vector-normalize desDir
+      ;; if the turtle was informed, we call the informedMove function
       if informed
       [
         informedMove
       ]
+      ;; move the turtles
     ]
 
   ]
 end
 
-to informedMove
+to informedAnimal
   ; They move with weighted target direction
+  ;; normalized weight
+  let weightedDir vector-multiply vector-normalize (list targetx targety) weight
+  ;; set the numerator of formula 3
+  let numerator vector-add desDir weightedDir
+  set desDir vector-normalize numerator
 end
-
-to getDist
-  ; Calculate the distance of one turtle to ALL others
-end
-
-
 
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
 ; add vectors
@@ -194,7 +202,7 @@ n
 n
 0
 200
-200.0
+15.0
 1
 1
 NIL
@@ -209,7 +217,7 @@ proportion
 proportion
 0
 1
-0.27
+0.4
 0.01
 1
 NIL
