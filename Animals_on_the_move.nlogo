@@ -51,16 +51,7 @@ to go
   normalAnimal ;; danach die direction wieder in deg umwandeln.
   move
   tick
-  ;show vecToDir [-1 1]
-  ;ask turtles [show list xcor ycor]
 end
-
-; wenn kein anderes da ist, wird die gewichtung von den anderen genommen und das Tier läuft in die Richtung
-  ; von den anderen Tierpositionen in der Umgebung (gemittelt) --> 8 patches
-  ; mach ne if (andere tiere auf meinem patch?)
-  ; -->  dann weg
-  ; else (ist tier attracted auf andere)
-  ; --> dann gemittelte Position aller anderen Tiere
 
 
 to normalAnimal
@@ -80,6 +71,7 @@ to normalAnimal
     ]
     ;;else
     [
+      set desDir (dirToVec direction)
       let d1 [0 0]
       let d2 [0 0]
       let posCurrentTurtle (list xcor ycor)
