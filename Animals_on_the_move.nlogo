@@ -44,11 +44,13 @@ to setup
   [
     set pcolor white
   ]
+  reset-ticks
 end
 
 to go
-  normalMove ;; danach die direction wieder in deg umwandeln.
-  ;;informedMove
+  normalAnimal ;; danach die direction wieder in deg umwandeln.
+  move
+  tick
   ;show vecToDir [-1 1]
   ;ask turtles [show list xcor ycor]
 end
@@ -59,6 +61,8 @@ end
   ; -->  dann weg
   ; else (ist tier attracted auf andere)
   ; --> dann gemittelte Position aller anderen Tiere
+
+
 to normalAnimal
   let newPosVec 0
   ; They move naively only guided by others
@@ -77,7 +81,7 @@ to normalAnimal
     ;;else
     [
       let d1 [0 0]
-      let d2 0
+      let d2 [0 0]
       let posCurrentTurtle (list xcor ycor)
       ask turtles-on neighbors
       [
@@ -97,9 +101,8 @@ to normalAnimal
       ;; if the turtle was informed, we call the informedMove function
       if informed
       [
-        informedMove
+        informedAnimal
       ]
-      ;; move the turtles
     ]
 
   ]
@@ -112,6 +115,17 @@ to informedAnimal
   ;; set the numerator of formula 3
   let numerator vector-add desDir weightedDir
   set desDir vector-normalize numerator
+end
+
+to move
+  ask turtles
+  [
+    set desDir vector-multiply desDir speed
+    let newPos vector-add (list xcor ycor) desDir
+    set direction vecToDir desDir
+    set heading direction
+    setxy first newPos last newPos
+  ]
 end
 
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
@@ -187,8 +201,8 @@ GRAPHICS-WINDOW
 16
 -16
 16
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -202,7 +216,7 @@ n
 n
 0
 200
-15.0
+115.0
 1
 1
 NIL
@@ -217,7 +231,7 @@ proportion
 proportion
 0
 1
-0.4
+0.22
 0.01
 1
 NIL
@@ -247,7 +261,7 @@ BUTTON
 208
 Go
 go
-NIL
+T
 1
 T
 OBSERVER
@@ -266,7 +280,7 @@ weight
 weight
 0
 1
-0.01
+0.3
 0.01
 1
 NIL
