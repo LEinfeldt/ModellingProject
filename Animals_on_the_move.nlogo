@@ -55,11 +55,13 @@ end
 
 
 to normalAnimal
-  let newPosVec 0
+
   ; They move naively only guided by others
   ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
   ask turtles
   [
+    let newPosVec 0
+    let posCurrentTurtle (list xcor ycor)
     ifelse count turtles-here > 1
     [
       ;move away from the current patch in the current direction
@@ -74,10 +76,9 @@ to normalAnimal
       set desDir (dirToVec direction)
       let d1 [0 0]
       let d2 [0 0]
-      let posCurrentTurtle (list xcor ycor)
       ask turtles-on neighbors
       [
-        ;; erster teil formel (2) --> attraction to other viecher
+        ;; first part of formula 2 --> attraction to other turtles
         ;; set the numerator of the first part of formula 2
         let numerator vector-substract (list xcor ycor) posCurrentTurtle
         ;; set d1 as the first part of formula 2
@@ -103,7 +104,7 @@ end
 to informedAnimal
   ; They move with weighted target direction
   ;; normalized weight
-  let weightedDir vector-multiply vector-normalize (list targetx targety) weight
+  let weightedDir vector-multiply (list targetx targety) weight
   ;; set the numerator of formula 3
   let numerator vector-add desDir weightedDir
   set desDir vector-normalize numerator
@@ -112,11 +113,12 @@ end
 to move
   ask turtles
   [
-    set desDir vector-multiply desDir speed
-    let newPos vector-add (list xcor ycor) desDir
+    let desDir-tmp vector-multiply desDir speed
+    let newPos vector-add (list xcor ycor) desDir-tmp
     set direction vecToDir desDir
     set heading direction
-    setxy first newPos last newPos
+    set xcor first newPos
+    set ycor last newPos
   ]
 end
 
@@ -193,8 +195,8 @@ GRAPHICS-WINDOW
 16
 -16
 16
-1
-1
+0
+0
 1
 ticks
 30.0
@@ -208,7 +210,7 @@ n
 n
 0
 200
-115.0
+200.0
 1
 1
 NIL
@@ -223,7 +225,7 @@ proportion
 proportion
 0
 1
-0.22
+0.25
 0.01
 1
 NIL
@@ -272,7 +274,7 @@ weight
 weight
 0
 1
-0.3
+0.27
 0.01
 1
 NIL
@@ -287,7 +289,7 @@ minDist
 minDist
 0
 100
-50.0
+11.0
 1
 1
 NIL
