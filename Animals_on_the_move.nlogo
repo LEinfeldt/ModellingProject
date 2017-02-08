@@ -22,7 +22,7 @@ to setup
   ;initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
-  set neighbourhood 20
+  set neighbourhood 10
   create-turtles number
   [
     set color red
@@ -62,42 +62,53 @@ to normalAnimal
   [
     let posCurrentTurtle (list xcor ycor)
     set desDir dirToVec direction
-    ifelse any? turtles-on neighbors
-    [
-
-    ]
-    ;;else
-    [
-      set desDir (dirToVec direction)
-      let d1 [0 0]
-      let d2 [0 0]
-      ; ask the turtles in the neighbourhood, defined in the setup
-      ; these will attact each other
-      if any? other turtles in-radius neighbourhood
+    ifelse count turtles-here > 1 [][
+      ifelse any? turtles-on neighbors
       [
-        ask other turtles in-radius neighbourhood
+        let d [0 0]
+        ask turtles-on neighbors
         [
           ;; first part of formula 2 --> attraction to other turtles
           ;; set the numerator of the first part of formula 2
           let numerator vector-substract (list xcor ycor) posCurrentTurtle
           ;; set d1 as the first part of formula 2
-          set d1 vector-add d1 (vector-normalize numerator)
-          ;; d ist desDir
-          ;; set the second part of formula 2
-          set d2 vector-add d2 vector-normalize dirToVec direction
+          set d vector-add d (vector-normalize numerator)
+        ]
+        set desDir vector-multiply (vector-normalize d) -1
+      ]
+      ;;else
+      [
+        if any? other turtles-here [show 1]
+        set desDir (dirToVec direction)
+        let d1 [0 0]
+        let d2 [0 0]
+        ; ask the turtles in the neighbourhood, defined in the setup
+        ; these will attact each other
+        if any? other turtles in-radius neighbourhood
+        [
+          ask other turtles in-radius neighbourhood
+          [
+            ;; first part of formula 2 --> attraction to other turtles
+            ;; set the numerator of the first part of formula 2
+            let numerator vector-substract (list xcor ycor) posCurrentTurtle
+            ;; set d1 as the first part of formula 2
+            set d1 vector-add d1 (vector-normalize numerator)
+            ;; d ist desDir
+            ;; set the second part of formula 2
+            set d2 vector-add d2 vector-normalize dirToVec direction
+          ]
+        ]
+        set d2 vector-add d2 vector-normalize desDir
+        ;; set the final d from formula 2
+        set desDir vector-add d1 d2
+        set desDir vector-normalize desDir
+        ;; if the turtle was informed, we call the informedMove function
+        if informed
+        [
+          informedAnimal
         ]
       ]
-      set d2 vector-add d2 vector-normalize desDir
-      ;; set the final d from formula 2
-      set desDir vector-add d1 d2
-      set desDir vector-normalize desDir
-      ;; if the turtle was informed, we call the informedMove function
-      if informed
-      [
-        informedAnimal
-      ]
     ]
-
   ]
 end
 
@@ -210,7 +221,7 @@ n
 n
 0
 400
-25.0
+166.0
 1
 1
 NIL
@@ -225,7 +236,7 @@ proportion
 proportion
 0
 1
-0.25
+0.58
 0.01
 1
 NIL
@@ -274,7 +285,7 @@ weight
 weight
 0
 2
-0.33
+0.42
 0.01
 1
 NIL
@@ -289,7 +300,7 @@ minDist
 minDist
 0
 100
-11.0
+13.0
 1
 1
 NIL
