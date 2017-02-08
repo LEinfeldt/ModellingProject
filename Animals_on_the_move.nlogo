@@ -2,27 +2,32 @@
 ; n --> number of animals
 ; proportion --> proportion of the informed animals
 ; weight --> weighting of the target direction by informed animals
-
+globals [
+  neighbourhood ; range for the turtles to follow others
+]
 
 turtles-own [
   speed ; speed si
   direction ; direction vector vi
   informed ; boolean
-  desdir ; desired direction of travel for each turtle --> d value in formula
+  desDir ; desired direction of travel for each turtle --> d value in formula
   targetx ; direction for the informed animals --> must be empty for uninformed ones
   targety
 ]
 
 to setup
   clear-all
+  reset-ticks
 
   ;initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
+  set neighbourhood 10
   create-turtles number
   [
     set color red
-    setxy random-xcor random-ycor
+    set xcor -90 + random 10
+    set ycor -90 + random 10
     set informed false
     set direction random 360
     set heading direction
@@ -31,20 +36,20 @@ to setup
   create-turtles n - number
   [
     set color blue
-    setxy random-xcor random-ycor
+    set xcor -90 + random 10
+    set ycor -90 + random 10
     set informed true
     set direction random 360
     set heading direction
     set speed 1
-    set targetx 15
-    set targety 15
+    set targetx 90
+    set targety 90
   ]
   ; target position for the turtle herd
-  ask patch 15 15
+  ask patch 90 90
   [
     set pcolor white
   ]
-  reset-ticks
 end
 
 to go
@@ -60,16 +65,18 @@ to normalAnimal
   ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
   ask turtles
   [
-    let newPosVec 0
     let posCurrentTurtle (list xcor ycor)
+    set desDir dirToVec direction
     ifelse count turtles-here > 1
     [
       ;move away from the current patch in the current direction
-      set direction (dirToVec direction)
-      let normal (vector-normalize direction)
-      set newPosVec (vector-multiply normal speed)
-      set desdir vector-add (list xcor ycor) newPosVec
-      set direction (vecToDir direction)
+      ;let newPosVec 0
+      ;set direction (dirToVec direction)
+      ;let normal (vector-normalize direction)
+      ;let newPosVec (vector-multiply normal speed)
+      ;set desDir vector-add (list xcor ycor) newPosVec
+      ;set direction (vecToDir direction)
+
     ]
     ;;else
     [
@@ -85,9 +92,9 @@ to normalAnimal
         set d1 vector-add d1 (vector-normalize numerator)
         ;; d ist desDir
         ;; set the second part of formula 2
-        set d2 vector-normalize (list xcor ycor)
+        set d2 vector-add d2 vector-normalize dirToVec direction
       ]
-      set d2 vector-add d2 posCurrentTurtle
+      set d2 vector-add d2 vector-normalize desDir
       ;; set the final d from formula 2
       set desDir vector-add d1 d2
       set desDir vector-normalize desDir
@@ -177,11 +184,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-647
-448
+724
+525
 -1
 -1
-13.0
+2.52
 1
 10
 1
@@ -191,12 +198,12 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
-0
-0
+-100
+100
+-100
+100
+1
+1
 1
 ticks
 30.0
@@ -210,7 +217,7 @@ n
 n
 0
 200
-200.0
+84.0
 1
 1
 NIL
@@ -225,7 +232,7 @@ proportion
 proportion
 0
 1
-0.25
+0.51
 0.01
 1
 NIL
@@ -274,7 +281,7 @@ weight
 weight
 0
 1
-0.27
+0.1
 0.01
 1
 NIL
