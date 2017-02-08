@@ -22,12 +22,12 @@ to setup
   ;initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
-  set neighbourhood 10
+  set neighbourhood minDist
   create-turtles number
   [
     set color red
-    set xcor -90 + random 10
-    set ycor -90 + random 10
+    set xcor -80 + random 10
+    set ycor -80 + random 10
     set informed false
     set direction random 360
     set heading direction
@@ -36,8 +36,8 @@ to setup
   create-turtles n - number
   [
     set color blue
-    set xcor -90 + random 10
-    set ycor -90 + random 10
+    set xcor -80 + random 10
+    set ycor -80 + random 10
     set informed true
     set direction random 360
     set heading direction
@@ -236,7 +236,7 @@ proportion
 proportion
 0
 1
-0.58
+0.24
 0.01
 1
 NIL
@@ -285,7 +285,7 @@ weight
 weight
 0
 2
-0.42
+0.57
 0.01
 1
 NIL
@@ -300,7 +300,7 @@ minDist
 minDist
 0
 100
-13.0
+22.0
 1
 1
 NIL
