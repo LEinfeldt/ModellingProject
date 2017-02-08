@@ -83,16 +83,19 @@ to normalAnimal
       set desDir (dirToVec direction)
       let d1 [0 0]
       let d2 [0 0]
-      ask turtles-on neighbors
+      if any? other turtles in-radius neighbourhood
       [
-        ;; first part of formula 2 --> attraction to other turtles
-        ;; set the numerator of the first part of formula 2
-        let numerator vector-substract (list xcor ycor) posCurrentTurtle
-        ;; set d1 as the first part of formula 2
-        set d1 vector-add d1 (vector-normalize numerator)
-        ;; d ist desDir
-        ;; set the second part of formula 2
-        set d2 vector-add d2 vector-normalize dirToVec direction
+        ask other turtles in-radius neighbourhood
+        [
+          ;; first part of formula 2 --> attraction to other turtles
+          ;; set the numerator of the first part of formula 2
+          let numerator vector-substract (list xcor ycor) posCurrentTurtle
+          ;; set d1 as the first part of formula 2
+          set d1 vector-add d1 (vector-normalize numerator)
+          ;; d ist desDir
+          ;; set the second part of formula 2
+          set d2 vector-add d2 vector-normalize dirToVec direction
+        ]
       ]
       set d2 vector-add d2 vector-normalize desDir
       ;; set the final d from formula 2
@@ -217,7 +220,7 @@ n
 n
 0
 200
-84.0
+168.0
 1
 1
 NIL
@@ -232,7 +235,7 @@ proportion
 proportion
 0
 1
-0.51
+0.2
 0.01
 1
 NIL
@@ -281,7 +284,7 @@ weight
 weight
 0
 1
-0.1
+0.2
 0.01
 1
 NIL
