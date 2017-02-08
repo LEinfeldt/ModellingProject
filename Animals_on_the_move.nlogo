@@ -22,7 +22,7 @@ to setup
   ;initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
-  set neighbourhood 10
+  set neighbourhood 20
   create-turtles number
   [
     set color red
@@ -42,13 +42,8 @@ to setup
     set direction random 360
     set heading direction
     set speed 1
-    set targetx 90
-    set targety 90
-  ]
-  ; target position for the turtle herd
-  ask patch 90 90
-  [
-    set pcolor white
+    set targetx 1
+    set targety 1
   ]
 end
 
@@ -67,15 +62,8 @@ to normalAnimal
   [
     let posCurrentTurtle (list xcor ycor)
     set desDir dirToVec direction
-    ifelse count turtles-here > 1
+    ifelse any? turtles-on neighbors
     [
-      ;move away from the current patch in the current direction
-      ;let newPosVec 0
-      ;set direction (dirToVec direction)
-      ;let normal (vector-normalize direction)
-      ;let newPosVec (vector-multiply normal speed)
-      ;set desDir vector-add (list xcor ycor) newPosVec
-      ;set direction (vecToDir direction)
 
     ]
     ;;else
@@ -83,6 +71,8 @@ to normalAnimal
       set desDir (dirToVec direction)
       let d1 [0 0]
       let d2 [0 0]
+      ; ask the turtles in the neighbourhood, defined in the setup
+      ; these will attact each other
       if any? other turtles in-radius neighbourhood
       [
         ask other turtles in-radius neighbourhood
@@ -219,8 +209,8 @@ SLIDER
 n
 n
 0
-200
-168.0
+400
+25.0
 1
 1
 NIL
@@ -235,7 +225,7 @@ proportion
 proportion
 0
 1
-0.2
+0.25
 0.01
 1
 NIL
@@ -283,8 +273,8 @@ SLIDER
 weight
 weight
 0
-1
-0.2
+2
+0.33
 0.01
 1
 NIL
