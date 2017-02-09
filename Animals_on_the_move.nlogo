@@ -129,6 +129,7 @@ to move
     let desDir-tmp vector-multiply desDir speed
     let newPos vector-add (list xcor ycor) desDir-tmp
     set direction vecToDir desDir
+    set desDir dirToVec direction
     set heading direction
     set xcor first newPos
     set ycor last newPos
@@ -137,8 +138,17 @@ end
 
 ;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
 
-to-report group-direction
-
+to-report group-position
+  let sumx 0
+  let sumy 0
+  ask turtles
+  [
+    set sumx sumx + xcor
+    set sumy sumy + ycor
+  ]
+  set sumx sumx / n
+  set sumy sumy / n
+  report (list sumx sumy)
 end
 
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
@@ -169,7 +179,6 @@ end
 to-report vector-normalize [v1]
   if vector-length v1 = 0
   [
-    show v1
     report v1
   ]
   report (vector-multiply v1 (1 / vector-length v1))
@@ -191,7 +200,11 @@ to-report vecToDir [v1]
   ;vertical vector
   let y (list 0 1)
   ;let hordeg (acos(first hor / vector-length (hor)))
-  if first v1 = 0 and last v1 = 0 [show 2]
+  if first v1 = 0 and last v1 = 0
+  [
+    show "random"
+    report random 360
+  ]
   if (first v1) < 0
   [
     report (360 - (acos( (scalar v y) / (vector-length(v) * vector-length(y)))))
@@ -319,24 +332,6 @@ minDist
 1
 NIL
 HORIZONTAL
-
-PLOT
-865
-125
-1065
-275
-Figure1
-Propotion of informed animals
-Accuracy
-0.0
-1.0
-0.0
-1.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -685,9 +680,10 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+  <experiment name="Punkt1" repetitions="3" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
+    <timeLimit steps="250"/>
     <metric>count turtles</metric>
     <enumeratedValueSet variable="minDist">
       <value value="22"/>
