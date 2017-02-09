@@ -26,20 +26,22 @@ to setup
   create-turtles number
   [
     set color red
-    set xcor -80 + random 10
-    set ycor -80 + random 10
+    set xcor -80 + random (10 * n / 100)
+    set ycor -80 + random (10 * n / 100)
     set informed false
     set direction random 360
+    set desDir dirToVec direction
     set heading direction
     set speed 1
   ]
   create-turtles n - number
   [
     set color blue
-    set xcor -80 + random 10
-    set ycor -80 + random 10
+    set xcor -80 + random (10 * n / 100)
+    set ycor -80 + random (10 * n / 100)
     set informed true
     set direction random 360
+    set desDir dirToVec direction
     set heading direction
     set speed 1
     set targetx 1
@@ -65,7 +67,7 @@ to normalAnimal
     ifelse count turtles-here > 1 [][
       ifelse any? turtles-on neighbors
       [
-        let d [0 0]
+        let d [0.0 0.0]
         ask turtles-on neighbors
         [
           ;; first part of formula 2 --> attraction to other turtles
@@ -80,8 +82,8 @@ to normalAnimal
       [
         if any? other turtles-here [show 1]
         set desDir (dirToVec direction)
-        let d1 [0 0]
-        let d2 [0 0]
+        let d1 [0.0 0.0]
+        let d2 [0.0 0.0]
         ; ask the turtles in the neighbourhood, defined in the setup
         ; these will attact each other
         if any? other turtles in-radius neighbourhood
@@ -133,6 +135,12 @@ to move
   ]
 end
 
+;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
+
+to-report group-direction
+
+end
+
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
 ; add vectors
 ; exapmle: show vector-add [0.1 0.2] [0.5 0.3]
@@ -159,6 +167,11 @@ end
 ; 1/length * v1
 ; exapmle: show vector-normalize [2 2]
 to-report vector-normalize [v1]
+  if vector-length v1 = 0
+  [
+    show v1
+    report v1
+  ]
   report (vector-multiply v1 (1 / vector-length v1))
 end
 ; calculate a scalar product
@@ -178,6 +191,7 @@ to-report vecToDir [v1]
   ;vertical vector
   let y (list 0 1)
   ;let hordeg (acos(first hor / vector-length (hor)))
+  if first v1 = 0 and last v1 = 0 [show 2]
   if (first v1) < 0
   [
     report (360 - (acos( (scalar v y) / (vector-length(v) * vector-length(y)))))
@@ -220,8 +234,8 @@ SLIDER
 n
 n
 0
-400
-166.0
+200
+200.0
 1
 1
 NIL
@@ -305,6 +319,24 @@ minDist
 1
 NIL
 HORIZONTAL
+
+PLOT
+865
+125
+1065
+275
+Figure1
+Propotion of informed animals
+Accuracy
+0.0
+1.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -652,6 +684,25 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="minDist">
+      <value value="22"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="weight">
+      <value value="0.57"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="proportion">
+      <value value="0.24"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="n">
+      <value value="200"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
