@@ -139,16 +139,20 @@ end
 ;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
 
 to-report group-position
-  let sumx 0
-  let sumy 0
-  ask turtles
+  if ticks = 250 or ticks = 245
   [
-    set sumx sumx + xcor
-    set sumy sumy + ycor
+    let sumx 0
+    let sumy 0
+    ask turtles
+    [
+      set sumx sumx + xcor
+      set sumy sumy + ycor
+    ]
+    set sumx sumx / n
+    set sumy sumy / n
+    report (list sumx sumy)
   ]
-  set sumx sumx / n
-  set sumy sumy / n
-  report (list sumx sumy)
+  report 0
 end
 
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
@@ -248,7 +252,7 @@ n
 n
 0
 200
-200.0
+55.0
 1
 1
 NIL
@@ -263,7 +267,7 @@ proportion
 proportion
 0
 1
-0.24
+0.6
 0.01
 1
 NIL
@@ -312,7 +316,7 @@ weight
 weight
 0
 2
-0.57
+0.5
 0.01
 1
 NIL
@@ -327,7 +331,7 @@ minDist
 minDist
 0
 100
-22.0
+20.0
 1
 1
 NIL
@@ -680,19 +684,20 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="Punkt1" repetitions="3" runMetricsEveryStep="false">
+  <experiment name="Punkt1" repetitions="3" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="250"/>
-    <metric>count turtles</metric>
+    <timeLimit steps="251"/>
+    <metric>group-position</metric>
     <enumeratedValueSet variable="minDist">
       <value value="22"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="weight">
-      <value value="0.57"/>
+      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="proportion">
-      <value value="0.24"/>
+      <value value="[0 0.02 0.1]"/>
+      <value value="[0.2 0.1 1]"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="n">
       <value value="200"/>
