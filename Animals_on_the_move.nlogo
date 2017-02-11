@@ -145,11 +145,13 @@ to-report group-position
   [
     let sumx 0
     let sumy 0
+
     ask turtles
     [
       set sumx sumx + xcor
       set sumy sumy + ycor
     ]
+
     set sumx sumx / n
     set sumy sumy / n
 
@@ -161,15 +163,13 @@ to-report group-position
     if ticks = 250
     [
       let help2 (list sumx sumy)
-      let resultDirection vecToDir vector-substract help2 help
-      if resultDirection > 180
-      [
-        set resultDirection (resultDirection - 180)
-      ]
-      report abs (45 - resultDirection)
+      let targetVec (list 1 1)
+
+      let resultVec vector-substract help2 help
+      let result acos ((scalar targetVec resultVec) / ((vector-length targetVec) * (vector-length resultVec)))
+      report result
     ]
   ]
-
   report 0
 end
 
@@ -271,7 +271,7 @@ n
 n
 0
 200
-100.0
+30.0
 1
 1
 NIL
@@ -703,7 +703,7 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="Punkt1" repetitions="50" runMetricsEveryStep="true">
+  <experiment name="30inividuals" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="251"/>
@@ -714,9 +714,25 @@ NetLogo 6.0
     <enumeratedValueSet variable="weight">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="proportion" first="0" step="0.02" last="0.1"/>
+    <enumeratedValueSet variable="proportion">
+      <value value="0"/>
+      <value value="0.02"/>
+      <value value="0.04"/>
+      <value value="0.06"/>
+      <value value="0.08"/>
+      <value value="0.1"/>
+      <value value="0.2"/>
+      <value value="0.3"/>
+      <value value="0.4"/>
+      <value value="0.5"/>
+      <value value="0.6"/>
+      <value value="0.7"/>
+      <value value="0.8"/>
+      <value value="0.9"/>
+      <value value="1"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="n">
-      <value value="50"/>
+      <value value="30"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="Punkt1" repetitions="20" runMetricsEveryStep="true">
