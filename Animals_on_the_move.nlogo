@@ -140,36 +140,42 @@ end
 
 ;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
 
+;; report the angle between the target vector and the group movement vector
 to-report group-position
   if ticks = 200 or ticks = 250
   [
     let sumx 0
     let sumy 0
 
+    ;; calculate the group center point
     ask turtles
     [
       set sumx sumx + xcor
       set sumy sumy + ycor
     ]
-
     set sumx sumx / n
     set sumy sumy / n
 
+    ;; save the group center for timestep 200
     if ticks = 200
     [
       set help (list sumx sumy)
     ]
 
+    ;; at timestep 250
     if ticks = 250
     [
       let help2 (list sumx sumy)
       let targetVec (list 1 1)
 
-      let resultVec vector-substract help2 help
-      let result acos ((scalar targetVec resultVec) / ((vector-length targetVec) * (vector-length resultVec)))
+      ;; calculate the direction vector between the group positions at 200 and 250 (movement vector)
+      let movementVec vector-substract help2 help
+      ;; calculate the angle between the target vector and the movement vector
+      let result acos ((scalar targetVec movementVec) / ((vector-length targetVec) * (vector-length movementVec)))
       report result
     ]
   ]
+  ;; report zero in every case except of timestep 250
   report 0
 end
 
@@ -350,7 +356,7 @@ minDist
 minDist
 0
 100
-20.0
+6.0
 1
 1
 NIL
@@ -703,13 +709,13 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="30inividuals" repetitions="50" runMetricsEveryStep="true">
+  <experiment name="30inividuals" repetitions="200" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="251"/>
     <metric>group-position</metric>
     <enumeratedValueSet variable="minDist">
-      <value value="20"/>
+      <value value="6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="weight">
       <value value="0.5"/>
