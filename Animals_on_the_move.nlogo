@@ -4,6 +4,7 @@
 ; weight --> weighting of the target direction by informed animals
 globals [
   neighbourhood ; range for the turtles to follow others
+  help
 ]
 
 turtles-own [
@@ -23,6 +24,7 @@ to setup
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
   set neighbourhood minDist
+  set help [0.0 0.0]
   create-turtles number
   [
     set color red
@@ -139,7 +141,7 @@ end
 ;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
 
 to-report group-position
-  if ticks = 250 or ticks = 245
+  if ticks = 200 or ticks = 250
   [
     let sumx 0
     let sumy 0
@@ -150,10 +152,27 @@ to-report group-position
     ]
     set sumx sumx / n
     set sumy sumy / n
-    report (list sumx sumy)
+
+    if ticks = 200
+    [
+      set help (list sumx sumy)
+    ]
+
+    if ticks = 250
+    [
+      let help2 (list sumx sumy)
+      let resultDirection vecToDir vector-substract help2 help
+      if resultDirection > 180
+      [
+        set resultDirection (resultDirection - 180)
+      ]
+      report abs (45 - resultDirection)
+    ]
   ]
+
   report 0
 end
+
 
 ;;;;;;;;;;;; vector calculations ;;;;;;;;;;;;;
 ; add vectors
@@ -252,7 +271,7 @@ n
 n
 0
 200
-55.0
+100.0
 1
 1
 NIL
@@ -267,7 +286,7 @@ proportion
 proportion
 0
 1
-0.6
+1.0
 0.01
 1
 NIL
@@ -684,23 +703,38 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="Punkt1" repetitions="3" runMetricsEveryStep="true">
+  <experiment name="Punkt1" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="251"/>
     <metric>group-position</metric>
     <enumeratedValueSet variable="minDist">
-      <value value="22"/>
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="weight">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="proportion" first="0" step="0.02" last="0.1"/>
+    <enumeratedValueSet variable="n">
+      <value value="50"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Punkt1" repetitions="20" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="251"/>
+    <metric>group-position</metric>
+    <enumeratedValueSet variable="minDist">
+      <value value="20"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="weight">
       <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="proportion">
-      <value value="[0 0.02 0.1]"/>
-      <value value="[0.2 0.1 1]"/>
+      <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="n">
-      <value value="200"/>
+      <value value="100"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
