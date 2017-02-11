@@ -1,7 +1,9 @@
-; minDist --> minimal distance tolerable for turtles
+; attractionRange --> minimal distance tolerable for turtles
 ; n --> number of animals
 ; proportion --> proportion of the informed animals
 ; weight --> weighting of the target direction by informed animals
+; twoPreferredDirections
+
 globals [
   neighbourhood ; range for the turtles to follow others
   help
@@ -23,8 +25,10 @@ to setup
   ;initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
-  set neighbourhood minDist
+  set neighbourhood attractionRange
   set help [0.0 0.0]
+
+  ;; uninformed
   create-turtles number
   [
     set color red
@@ -36,19 +40,55 @@ to setup
     set heading direction
     set speed 1
   ]
-  create-turtles n - number
+
+  ;; informed
+  ifelse twoPreferredDirections
   [
-    set color blue
-    set xcor -80 + random (10 * n / 100)
-    set ycor -80 + random (10 * n / 100)
-    set informed true
-    set direction random 360
-    set desDir dirToVec direction
-    set heading direction
-    set speed 1
-    set targetx 1
-    set targety 1
+    ;; two preferred directions
+    create-turtles (n - number) / 2
+    [
+      set color blue
+      set xcor -80 + random (10 * n / 100)
+      set ycor -80 + random (10 * n / 100)
+      set informed true
+      set direction random 360
+      set desDir dirToVec direction
+      set heading direction
+      set speed 1
+      set targetx 1
+      set targety 0
+    ]
+     create-turtles n - ((n - number) / 2) - (n - number)
+    [
+      set color cyan
+      set xcor -80 + random (10 * n / 100)
+      set ycor -80 + random (10 * n / 100)
+      set informed true
+      set direction random 360
+      set desDir dirToVec direction
+      set heading direction
+      set speed 1
+      set targetx 0
+      set targety 1
+    ]
   ]
+  [
+      ;; one preferred direction
+     create-turtles n - number
+    [
+      set color blue
+      set xcor -80 + random (10 * n / 100)
+      set ycor -80 + random (10 * n / 100)
+      set informed true
+      set direction random 360
+      set desDir dirToVec direction
+      set heading direction
+      set speed 1
+      set targetx 1
+      set targety 1
+    ]
+  ]
+
 end
 
 to go
@@ -141,7 +181,7 @@ end
 ;;;;;;;;;;;; graph functions ;;;;;;;;;;;;
 
 ;; report the angle between the target vector and the group movement vector
-to-report group-position
+to-report movementAngle
   if ticks = 200 or ticks = 250
   [
     let sumx 0
@@ -277,7 +317,7 @@ n
 n
 0
 200
-30.0
+73.0
 1
 1
 NIL
@@ -292,7 +332,7 @@ proportion
 proportion
 0
 1
-1.0
+0.43
 0.01
 1
 NIL
@@ -341,7 +381,7 @@ weight
 weight
 0
 2
-0.5
+0.38
 0.01
 1
 NIL
@@ -352,8 +392,8 @@ SLIDER
 134
 192
 167
-minDist
-minDist
+attractionRange
+attractionRange
 0
 100
 6.0
@@ -361,6 +401,17 @@ minDist
 1
 NIL
 HORIZONTAL
+
+SWITCH
+21
+222
+205
+255
+twoPreferredDirections
+twoPreferredDirections
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -714,7 +765,7 @@ NetLogo 6.0
     <go>go</go>
     <timeLimit steps="251"/>
     <metric>group-position</metric>
-    <enumeratedValueSet variable="minDist">
+    <enumeratedValueSet variable="attractionRange">
       <value value="6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="weight">
