@@ -92,7 +92,7 @@ to setup
 end
 
 to go
-  normalAnimal ;; danach die direction wieder in deg umwandeln.
+  normalAnimal
   move
   tick
 end
@@ -122,7 +122,6 @@ to normalAnimal
       ]
       ;;else
       [
-        if any? other turtles-here [show 1]
         set desDir (dirToVec direction)
         let d1 [0.0 0.0]
         let d2 [0.0 0.0]
@@ -271,7 +270,6 @@ to-report vecToDir [v1]
   ;let hordeg (acos(first hor / vector-length (hor)))
   if first v1 = 0 and last v1 = 0
   [
-    show "random"
     report random 360
   ]
   if (first v1) < 0
@@ -317,7 +315,7 @@ n
 n
 0
 200
-73.0
+124.0
 1
 1
 NIL
@@ -332,7 +330,7 @@ proportion
 proportion
 0
 1
-0.43
+0.5
 0.01
 1
 NIL
@@ -381,7 +379,7 @@ weight
 weight
 0
 2
-0.38
+0.4
 0.01
 1
 NIL
@@ -396,7 +394,7 @@ attractionRange
 attractionRange
 0
 100
-6.0
+20.0
 1
 1
 NIL
@@ -416,39 +414,46 @@ twoPreferredDirections
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+The model investigates the movement behaviour of animal herds. The model differentiates between naive animals and informed animals, which know the target direction of the herd. Furthermore, the model takes the interaction of animals among each other into account.
+
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+The model uses three formula from the paper Couzin et al. (2005, see references) to determine the movement behavior of the animals by taking different parameters into account. These formula calculate the avoidance of collisions with and attraction range to other animals. Additionally a weighting of the target direction is taken into account for a calculation of the attraction range for informed animals. 
 
 ## HOW TO USE IT
+The user has to press "Setup" to generate a new setting of the model. Following, the "Go" button can be used to run the model. 
 
-(how to use the model, including a description of each of the items in the Interface tab)
+The user of the model can set different parameters in the Interface tab:
+"N" is the number of animals in the herd. 
+"propotion" is the proportion of informed animals in the herd. 
+The "weight" describes how strong the target direction influences the behavior of the informed agents. 
+The "attraction range" defines the radius of the neighborhood of an animal that influences its movement behavior. 
+
+Additionally the "twoPreferredDirection" slider can be used. If it is not activated all informed animals follow the same target direction. If it is activated there are two equally sized groups of informed animals, follwing two different target directions.
+
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+Try to use the slider to test different settings for the model and to see the influence of the different values to the herds movement behavior. 
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+You could extend the model in a way that it can take more than two different target directions into account.  
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+As the formular were based on vector calculations, the model includes additional functions for vector calculations. 
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+Couzin, I. D., Krause, J., Franks, N. R., & Levin, S. A. (2005). Effective leadership and decision- making in animal groups on the move, 433(February), 2–5.
 @#$#@#$#@
 default
 true
