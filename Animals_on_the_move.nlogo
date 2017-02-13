@@ -1,4 +1,4 @@
-; attractionRange --> minimal distance tolerable for turtles
+; attractionRange --> maximum distance for recognition of other animalsmaximum distance for recognition of other agents)
 ; n --> number of animals
 ; proportion --> proportion of the informed animals
 ; weight --> weighting of the target direction by informed animals
