@@ -22,32 +22,37 @@ to setup
   clear-all
   reset-ticks
 
-  ;initialize the turtles
+  ;; initialize the turtles
   set-default-shape turtles "bug"
   let number round (n - n * proportion)
   set neighbourhood attractionRange
   set help [0.0 0.0]
 
-  ;; uninformed
+  ;; create uninformed turtles
   create-turtles number
   [
     set color red
+    ;; assign possible spawn area
     set xcor -80 + random (10 * n / 100)
     set ycor -80 + random (10 * n / 100)
-    set informed false
+    set informed false ;; -> uninformed
     set direction random 360
     set desDir dirToVec direction
     set heading direction
     set speed 1
   ]
 
-  ;; informed
+  ;; create informed turtles
+  ;; distinguish between one-directional/two-directional setups (twoPreferredDirections FALSE/TRUE)
   ifelse twoPreferredDirections
   [
-    ;; two preferred directions
+    ;; twoPreferredDirections == TRUE
+    ;; create two even-sized groups of informed turtles for two different target directions
+    ;; first informed group
     create-turtles (n - number) / 2
     [
       set color blue
+      ;; assign possible spawn area
       set xcor -80 + random (10 * n / 100)
       set ycor -80 + random (10 * n / 100)
       set informed true
@@ -55,12 +60,15 @@ to setup
       set desDir dirToVec direction
       set heading direction
       set speed 1
+      ;; first group targets direction of 90° (east)
       set targetx 1
       set targety 0
     ]
+    ;; second informed group
      create-turtles n - ((n - number) / 2) - (n - number)
     [
       set color cyan
+      ;; assign possible spawn area
       set xcor -80 + random (10 * n / 100)
       set ycor -80 + random (10 * n / 100)
       set informed true
@@ -68,15 +76,18 @@ to setup
       set desDir dirToVec direction
       set heading direction
       set speed 1
+      ;; second group targets direction of 0° (north)
       set targetx 0
       set targety 1
     ]
   ]
   [
-      ;; one preferred direction
+     ;; twoPreferredDirections == FALSE
+     ;; informed group
      create-turtles n - number
     [
       set color blue
+      ;; assign possible spawn area
       set xcor -80 + random (10 * n / 100)
       set ycor -80 + random (10 * n / 100)
       set informed true
@@ -84,6 +95,7 @@ to setup
       set desDir dirToVec direction
       set heading direction
       set speed 1
+      ;; group targets direction of 45° (north-east)
       set targetx 1
       set targety 1
     ]
@@ -97,16 +109,21 @@ to go
   tick
 end
 
-
+;; executes uninformed movement, only calls movement for informed (informedAnimal) if informed == TRUE
 to normalAnimal
 
   ; They move naively only guided by others
   ; If a turtle is located at the same patch, the turtle is gonna move away from this patch, no matter what other turtles are around
   ask turtles
   [
+    ;; get current turtle
     let posCurrentTurtle (list xcor ycor)
+    ;; set designated direction of the turtle to direction vector
     set desDir dirToVec direction
+    ;; check if turtle is not alone on current patch
     ifelse count turtles-here > 1 [][
+      ;; turtle is alone on its patch
+      ;; check if there are turtles on neighbour patches
       ifelse any? turtles-on neighbors
       [
         let d [0.0 0.0]
@@ -120,15 +137,15 @@ to normalAnimal
         ]
         set desDir vector-multiply (vector-normalize d) -1
       ]
-      ;;else
+      ;; no turtles on neighbour patches
       [
         set desDir (dirToVec direction)
         let d1 [0.0 0.0]
         let d2 [0.0 0.0]
-        ; ask the turtles in the neighbourhood, defined in the setup
-        ; these will attact each other
+        ;; check if there are any turtles in the neighbourhood range defined in setup
         if any? other turtles in-radius neighbourhood
         [
+          ;; cause attraction on turtles in the neighbourhood
           ask other turtles in-radius neighbourhood
           [
             ;; first part of formula 2 --> attraction to other turtles
@@ -155,6 +172,7 @@ to normalAnimal
   ]
 end
 
+;; weighted movement for informed turtles
 to informedAnimal
   ; They move with weighted target direction
   ;; normalized weight
@@ -164,15 +182,23 @@ to informedAnimal
   set desDir vector-normalize numerator
 end
 
+;; update locations and headings of turtles
 to move
   ask turtles
   [
+    ;;apply speed to direction vector
     let desDir-tmp vector-multiply desDir speed
+    ;;update new position
     let newPos vector-add (list xcor ycor) desDir-tmp
+    ;;transform direction vector to angle
     set direction vecToDir desDir
+    ;;transform designated direction from angle to vector
     set desDir dirToVec direction
+    ;;update heading with new angle
     set heading direction
+    ;;apply new x coord
     set xcor first newPos
+    ;;apply new y coord
     set ycor last newPos
   ]
 end
@@ -407,7 +433,7 @@ SWITCH
 255
 twoPreferredDirections
 twoPreferredDirections
-1
+0
 1
 -1000
 
